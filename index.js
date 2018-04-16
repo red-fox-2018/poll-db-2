@@ -26,7 +26,7 @@ class readDatabase{
 
     static displayDataNo3(callback){
         db.serialize(function(){
-            db.all("SELECT COUNT(*) AS 'totalVote',first_name || ' ' || last_name AS 'name',gender,age FROM voters JOIN votes ON voterId = voters.id GROUP BY voterId ORDER BY totalVote DESC",function(err,row){
+            db.all("WITH vote AS ( SELECT COUNT(*) AS 'totalVote',first_name || ' ' || last_name AS 'name',gender,age FROM voters JOIN votes ON voterId = voters.id GROUP BY voterId  ORDER BY totalVote DESC)SELECT totalVote, name, gender,age FROM vote WHERE totalVote > 1",function(err,row){
                 if(err){
                     throw err
                 }

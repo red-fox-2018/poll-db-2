@@ -1,0 +1,23 @@
+release 0
+select politicians.name, politicians.location, politicians.grade_current ,count(*) totalVote
+from politicians join votes on politicians.id = votes.politicianId
+where politicians.grade_current < 9
+group by politicians.id
+order by totalVote asc
+
+
+release 1
+
+select tmpTable.totalVote , tmpTable.name,(first_name ||  '  '  || last_name) as voterName, gender
+from votes
+join
+(select politicians.id ,count(*) as totalVote, name from politicians
+ join votes on politicians.id = votes.politicianId
+ group by politicians.id order by totalVote desc limit 3) AS tmpTable
+ on tmpTable.id = votes.politicianId
+ join voters on voters.id = votes.voterId
+ order by name desc
+
+release 2
+select (select count(*) from votes where voters.id = votes.voterId) as totalVote, first_name || ' ' || last_name as name,
+gender , age from voters where totalVote > 1 order by totalVote DESC;

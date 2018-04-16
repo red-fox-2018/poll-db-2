@@ -1,8 +1,7 @@
 var sqlite3 = require('sqlite3').verbose();  
 var db = new sqlite3.Database('poll.db');
 
-db.serialize(function (err) {
-    if(err) console.log('error')
+
 
     db.all(`SELECT politicians.name,politicians.location,politicians.grade_current,COUNT(*) AS totalVote
             FROM politicians
@@ -35,19 +34,19 @@ db.serialize(function (err) {
                     console.log(rows)
                     console.log()
     })
-    db.all(`WITH totalVoted AS (
+    db.all(`WITH cheater AS (
             SELECT COUNT(*) AS totalVote,voters.first_name||' '||voters.last_name AS full_name,voters.gender,voters.age FROM voters
             JOIN votes
             ON voters.id=votes.voterId
             GROUP BY votes.voterId
             ORDER BY totalVote DESC
             )
-            SELECT * FROM totalVoted
-            WHERE totalVoted.totalVote>1`,function (err,rows) {
+            SELECT * FROM cheater
+            WHERE cheater.totalVote>1`,function (err,rows) {
                 if (err) console.log('error')
                 console.log('----------- Question No.3-----------')
                 console.log(rows)
                 console.log()
     })
 
-})
+

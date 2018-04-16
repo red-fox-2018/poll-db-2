@@ -1,0 +1,14 @@
+Refer to poll db 1 
+
+
+No.1 
+
+SELECT name,location,grade_current,COUNT(*) AS totalVote
+FROM politicians
+JOIN votes ON politicians.Id = votes.politicianId
+WHERE politicians.grade_current < 9
+GROUP BY politicians.name
+
+
+
+No.2 

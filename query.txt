@@ -1,0 +1,22 @@
+RELEASE 0
+1
+SELECT politicians.name, politicians.location, politicians.grade_current, COUNT(votes.id_politician) AS totalVote
+FROM politicians JOIN votes ON politicians.id = votes.id_politician
+WHERE politicians.grade_current < 9 GROUP BY politicians.id ORDER BY politicians.grade_current ASC
+
+2
+SELECT newTable.totalVote, newTable.name AS politicianName, (voters.firstName ||' '|| voters.lastName) AS voterName, voters.gender
+FROM votes 
+JOIN
+(SELECT COUNT(votes.id_politician) AS totalVote, politicians.id AS idPolitician,politicians.name
+FROM votes JOIN politicians
+ON votes.id_politician = politicians.id
+GROUP BY politicians.id ORDER by totalVote DESC LIMIT 3) AS newTable
+ON votes.id_politician = newTable.idPolitician
+JOIN voters ON voters.id = votes.id_voter
+
+3
+
+SELECT COUNT(votes.id_voter) AS totalVote, (voters.firstName||' '||voters.lastName) AS name, voters.age
+FROM votes JOIN voters ON votes.id_voter = voters.id
+GROUP BY voters.id HAVING totalVote > 1 ORDER BY totalVote DESC

@@ -1,0 +1,32 @@
+1. SELECT *
+   FROM Politicians
+   WHERE grade_current < 9
+   ORDER BY grade_current ASC;
+2.
+3. SELECT (SELECT count(*)
+           FROM Votes
+           WHERE Voters.id = Votes.voterId) AS 'totalVote',
+  first_name||' '||last_name AS name, gender, age
+  FROM Voters
+  WHERE totalVote > 1
+  ORDER BY totalVote DESC;
+
+
+SELECT (SELECT count(*)
+        FROM Votes
+        WHERE Politicians.id = Votes.politicianId)
+      AS 'totalVote',
+      Politicians.name AS 'politicianName',
+      Voters.first_name||' '||Voters.last_name AS 'voterName',
+      Voters.gender
+FROM Votes
+JOIN Politicians ON Politicians.id = Votes.PoliticianId
+JOIN Voters ON Votes.VoterId = Voters.id
+WHERE Politicians.id IN (SELECT Politicians.id
+  FROM Politicians
+  Join Votes
+  ON Votes.politicianId = Politicians.id
+  GROUP BY Politicians.id
+  ORDER BY count(Votes.voterId) DESC
+  LIMIT 3)
+ORDER BY totalVote DESC, politicianName

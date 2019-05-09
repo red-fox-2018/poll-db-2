@@ -1,0 +1,9 @@
+WITH bad_grade AS(
+SELECT politicians.name,politicians.location,politicians.grade_current,COUNT(*) AS totalVote FROM  politicians
+JOIN votes
+ON politicians.id = votes.politicianId
+WHERE politicians.grade_current<9
+GROUP BY politicians.name 
+)
+SELECT * FROM bad_grade
+ORDER by bad_grade.totalVote ASC
